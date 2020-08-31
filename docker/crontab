@@ -1,0 +1,3 @@
+# Don't remove the empty line at the end of this file. It is required to run the cron job
+* * * * * cd /var/www/html && php artisan schedule:run >> /var/log/crontab.log 2>&1
+#* * * * * root echo "Hello world" >> /var/log/crontab.log 2>&1

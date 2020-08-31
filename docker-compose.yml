@@ -1,0 +1,15 @@
+version: '3.8'
+
+services:
+  app:
+    build: ./docker
+    container_name: pokemon_tv_dl_app
+    environment:
+      PHP_VERSION: 7.2
+    volumes:
+      - ./:/var/www/html
+      - ./docker/crontab.log:/var/log/crontab.log
+    ports:
+      - 8001:80
+    #restart:
+    #  unless-stopped
