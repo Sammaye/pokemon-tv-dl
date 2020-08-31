@@ -78,3 +78,8 @@ yarn-error.log
 docker/nginx/log
 config/credentials.json
 config/token.json
+
+episodes/*
+!episodes/.gitkeep
+episodes/complete/*
+!episodes/complete/.gitkeep

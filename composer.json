@@ -1,0 +1,8 @@
+{
+    "name": "smmaye/pokemon-tv-dl",
+    "type": "project",
+    "require": {
+        "guzzlehttp/guzzle": "^7.1@dev"
+    },
+    "minimum-stability": "dev"
+}
