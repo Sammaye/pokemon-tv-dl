@@ -4,22 +4,22 @@ define('DS', DIRECTORY_SEPARATOR);
 
 require_once ROOT . DS . 'vendor' . DS . 'autoload.php';
 
-function buildPath($path, $directory_separator = '/')
-{
+function buildPath($path, $directory_separator = '/') {
     $newPath = str_replace($directory_separator, DS, $path);
     if (strpos($path, '/') === 0) {
         return ROOT . $newPath;
     }
+
     return $newPath;
 }
 
-function getFiles($path)
-{
+function getFiles($path) {
     $files = [];
     foreach (glob($path) as $file) {
-        $files[]  = "file '$file'";
+        $files[] = "file '$file'";
     }
     natsort($files);
+
     return $files;
 }
 
@@ -27,7 +27,7 @@ function out($message, $type = null) {
 
     $defaultColour = "\e[0m";
 
-    switch ($type){
+    switch ($type) {
         case 'info':
             $colour = "\e[34m";
             break;
@@ -64,9 +64,15 @@ while (($line_url = fgets($urlListHandle)) !== false) {
     out(sprintf('Received URL %s', $url), 'success');
 
     $matches = [];
-    preg_match_all('#/(.[^/]*)\.mpegts/playlist([0-9+])\.ts$#', $url, $matches);
-    $filename = $matches[1][0];
-    $position = (int)$matches[2][0];
+    if (preg_match('#playlist([0-9]+)\.ts#', $url)) {
+        preg_match_all('#/(.[^/]*)\.mpegts/playlist([0-9+])\.ts$#', $url, $matches);
+        $filename = $matches[1][0];
+        $position = (int)$matches[2][0];
+    } elseif (preg_match('#seg-([0-9]+)-v1-a1\.ts#', $url)) {
+        preg_match_all('#/seg-([0-9+])-v1-a1\.ts$#', $url, $matches);
+        $filename = 'vid_' . str_replace(' ', '_', str_replace('.', '_', microtime()));
+        $position = (int)$matches[1][0];
+    }
 
     $episodePath = buildPath("/episodes/$filename");
     if (!file_exists($episodePath) && !mkdir($episodePath, 0777, true)) {
@@ -95,7 +101,11 @@ while (($line_url = fgets($urlListHandle)) !== false) {
 
         file_put_contents($episodePath . DS . "$position.mpegts", $data);
 
-        $url = preg_replace('#playlist([0-9]+)\.ts$#', 'playlist' . ++$position . '.ts', $url);
+        if (preg_match('#playlist([0-9]+)\.ts#', $url)) {
+            $url = preg_replace('#playlist([0-9]+)\.ts$#', 'playlist' . ++$position . '.ts', $url);
+        } elseif (preg_match('#seg-([0-9]+)-v1-a1\.ts#', $url)) {
+            $url = preg_replace('#seg-([0-9]+)-v1-a1\.ts$#', 'seg-' . ++$position . '-v1-a1.ts', $url);
+        }
 
         sleep(4);
     } while ($has_data);
