@@ -79,7 +79,7 @@ while (($line_url = fgets($urlListHandle)) !== false) {
     do {
         out(sprintf('Fetching chunk %s', $position));
 
-        $client = new \GuzzleHttp\Client();
+        $client = new \GuzzleHttp\Client(['verify' => false]);
         $res = $client->request('GET', $url, [
             'http_errors' => false,
             'User-Agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/62.0.3202.94 Safari/537.36',
