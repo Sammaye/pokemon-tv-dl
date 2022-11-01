@@ -19,7 +19,7 @@ Allows for downloading blob data from Pokemon TV; yes - essential life stuff.
 - Type: `docker exec -it pokemon_tv_dl_app bash` and press enter
 - Type: `cd /var/www/html` and press enter
 - Type: `php ./download.php` and press enter
-- It will now download your episodes from the 
+- It will now download your episodes from the urls.txt file
 
 The script will then download the parts and then use ffmpeg to join them into episodes in the complete folder.
 
